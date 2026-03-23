@@ -5,7 +5,6 @@ const notificationRoute = require('./routes/notificationRoute');
 
 require("dotenv").config();
 
-// ✅ Enable CORS BEFORE route declarations
 app.use(cors({
   origin: 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
