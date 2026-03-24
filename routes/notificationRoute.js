@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const sendMail = require('../sendMail');
 
-// 📦 Order Placed.
+// 📦 Order Placed
 router.post('/order-placed', async (req, res) => {
   const { customerEmail } = req.body;
   await sendMail(
