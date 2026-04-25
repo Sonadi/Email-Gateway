@@ -17,4 +17,4 @@ app.use(express.json()); // Parse JSON bodies
 app.use('/api/notification', notificationRoute);
 
 const PORT = process.env.PORT || 5045;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));///
