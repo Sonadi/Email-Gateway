@@ -25,4 +25,4 @@ const sendMail = async (to, subject, html) => {
   }
 };
 
-module.exports = sendMail;
+module.exports = sendMail;////
