@@ -1,28 +1,26 @@
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 require("dotenv").config();
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,      // ← renamed from USER
-    pass: process.env.APP_PASSWORD,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-// ✅ Replace your old sendMail function with this
 const sendMail = async (to, subject, html) => {
   try {
-    const info = await transporter.sendMail({
-      from: `"Deliveroo Food" <${process.env.EMAIL_USER}>`,  // ← renamed
+    const { data, error } = await resend.emails.send({
+      from: "Deliveroo Food <onboarding@resend.dev>",
       to,
       subject,
-      html
+      html,
     });
-    console.log("📧 Email sent:", info.messageId);
-  } catch (error) {
-    console.error("❌ Email sending failed:", error.message);
-    console.error("❌ Full error:", JSON.stringify(error));
+
+    if (error) {
+      console.error("❌ Email sending failed:", error);
+      return;
+    }
+
+    console.log("📧 Email sent:", data.id);
+  } catch (err) {
+    console.error("❌ Unexpected error:", err.message);
   }
 };
 
-module.exports = sendMail;////
+module.exports = sendMail;
