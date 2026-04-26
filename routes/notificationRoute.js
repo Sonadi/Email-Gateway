@@ -8,32 +8,23 @@ router.post("/order-placed", async (req, res) => {
     const { customerEmail } = req.body;
 
     if (!customerEmail) {
-      return res.status(400).json({ success: false, message: "customerEmail is required" });
+      return res.status(400).json({ message: "customerEmail is required" });
     }
 
-    await sendMail(
+    // ✅ Respond immediately (avoid 502 timeout)
+    res.status(200).json({ message: "Order email request received" });
+
+    // ✅ Send email in background (non-blocking)
+    sendMail(
       customerEmail,
       "Order Confirmation - Deliveroo",
       "<h2>Your order has been placed successfully!</h2>"
     );
 
-    console.log("✅ Order email sent to:", customerEmail);
-
-    res.status(200).json({
-      success: true,
-      message: "Order confirmation email sent."
-    });
-
   } catch (error) {
-    console.error("❌ Error sending order email:", error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to send order confirmation email"
-    });
+    console.error("❌ Order email error:", error);
   }
 });
-
 
 // 💳 Payment Successful
 router.post("/payment-success", async (req, res) => {
@@ -41,32 +32,21 @@ router.post("/payment-success", async (req, res) => {
     const { customerEmail } = req.body;
 
     if (!customerEmail) {
-      return res.status(400).json({ success: false, message: "customerEmail is required" });
+      return res.status(400).json({ message: "customerEmail is required" });
     }
 
-    await sendMail(
+    res.status(200).json({ message: "Payment email request received" });
+
+    sendMail(
       customerEmail,
       "Payment Successful - Deliveroo",
       "<h2>Your payment was successful. Thank you!</h2>"
     );
 
-    console.log("✅ Payment email sent to:", customerEmail);
-
-    res.status(200).json({
-      success: true,
-      message: "Payment confirmation email sent."
-    });
-
   } catch (error) {
-    console.error("❌ Error sending payment email:", error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to send payment confirmation email"
-    });
+    console.error("❌ Payment email error:", error);
   }
 });
-
 
 // ✅ Order Approved
 router.post("/order-approved", async (req, res) => {
@@ -75,39 +55,27 @@ router.post("/order-approved", async (req, res) => {
 
     if (!customerEmail || !deliveryEmail) {
       return res.status(400).json({
-        success: false,
         message: "customerEmail and deliveryEmail are required"
       });
     }
 
-    // Notify customer
-    await sendMail(
+    res.status(200).json({ message: "Order approval emails triggered" });
+
+    // Send emails in background
+    sendMail(
       customerEmail,
       "Order Approved - Deliveroo",
       "<h2>Your order is approved and being prepared!</h2>"
     );
 
-    // Notify delivery personnel
-    await sendMail(
+    sendMail(
       deliveryEmail,
       "New Delivery Assigned - Deliveroo",
-      "<h2>A new order has been assigned to you. Check your app.</h2>"
+      "<h2>A new order has been assigned to you.</h2>"
     );
 
-    console.log("✅ Order approved emails sent");
-
-    res.status(200).json({
-      success: true,
-      message: "Order approval notifications sent."
-    });
-
   } catch (error) {
-    console.error("❌ Error sending approval emails:", error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to send order approval emails"
-    });
+    console.error("❌ Approval email error:", error);
   }
 });
 
