@@ -1,29 +1,27 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 
-// ✅ Create transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.USER,
+    user: process.env.EMAIL_USER,      // ← renamed from USER
     pass: process.env.APP_PASSWORD,
   },
 });
 
-// ✅ Send mail function
+// ✅ Replace your old sendMail function with this
 const sendMail = async (to, subject, html) => {
   try {
     const info = await transporter.sendMail({
-      from: `"Deliveroo Food" <${process.env.USER}>`,
+      from: `"Deliveroo Food" <${process.env.EMAIL_USER}>`,  // ← renamed
       to,
       subject,
-      html,
+      html
     });
-
     console.log("📧 Email sent:", info.messageId);
-
   } catch (error) {
-    console.error("❌ Email sending failed:", error);
+    console.error("❌ Email sending failed:", error.message);
+    console.error("❌ Full error:", JSON.stringify(error));
   }
 };
 
