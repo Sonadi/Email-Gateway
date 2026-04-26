@@ -9,7 +9,7 @@ const notificationRoute = require("./routes/notificationRoute");
 const allowedOrigins = [
   "http://localhost:5173",
   "https://glowing-sunshine-d907db.netlify.app"
-];
+]; 
 
 app.use(cors({
   origin: function (origin, callback) {
